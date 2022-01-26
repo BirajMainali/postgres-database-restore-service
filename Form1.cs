@@ -131,7 +131,7 @@ namespace PG_Administrator
             const string pwdKey = "PGPASSWORD";
             var proc = new Process();
             proc.StartInfo.FileName = "psql";
-            proc.StartInfo.Arguments = $@"-U {vo.User} -c ""{vo.Type} database {vo.Database}""";
+            proc.StartInfo.Arguments = $@"-U {vo.User} -c ""{vo.Type} database """"{vo.Database}""""";
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.RedirectStandardError = true;
             proc.StartInfo.UseShellExecute = false;
