@@ -1,4 +1,4 @@
-﻿namespace PG_Administrator
+﻿namespace postgres_database_restore_tool
 {
     partial class PgAdmin
     {
@@ -41,6 +41,9 @@
             this.DbNamelbl = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.ActionSelectorElem = new System.Windows.Forms.ComboBox();
+            this.StatusElem = new System.Windows.Forms.Label();
+            this.WorkingStatus = new System.Windows.Forms.Label();
+            this.SelectedFilelbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // UserLbl
@@ -97,9 +100,9 @@
             // 
             // RestoreBtn
             // 
-            this.RestoreBtn.Location = new System.Drawing.Point(208, 197);
+            this.RestoreBtn.Location = new System.Drawing.Point(244, 193);
             this.RestoreBtn.Name = "RestoreBtn";
-            this.RestoreBtn.Size = new System.Drawing.Size(206, 48);
+            this.RestoreBtn.Size = new System.Drawing.Size(170, 48);
             this.RestoreBtn.TabIndex = 6;
             this.RestoreBtn.Text = "Restore";
             this.RestoreBtn.UseVisualStyleBackColor = true;
@@ -110,11 +113,11 @@
             // 
             // FileOpenElem
             // 
-            this.FileOpenElem.Location = new System.Drawing.Point(106, 203);
+            this.FileOpenElem.Location = new System.Drawing.Point(142, 195);
             this.FileOpenElem.Name = "FileOpenElem";
-            this.FileOpenElem.Size = new System.Drawing.Size(96, 36);
+            this.FileOpenElem.Size = new System.Drawing.Size(96, 44);
             this.FileOpenElem.TabIndex = 7;
-            this.FileOpenElem.Text = "Choose file to restore";
+            this.FileOpenElem.Text = "Choose file";
             this.FileOpenElem.UseVisualStyleBackColor = true;
             // 
             // DatabaseElem
@@ -150,11 +153,38 @@
             this.ActionSelectorElem.Size = new System.Drawing.Size(231, 21);
             this.ActionSelectorElem.TabIndex = 12;
             // 
+            // StatusElem
+            // 
+            this.StatusElem.AutoSize = true;
+            this.StatusElem.Location = new System.Drawing.Point(241, 265);
+            this.StatusElem.Name = "StatusElem";
+            this.StatusElem.Size = new System.Drawing.Size(0, 13);
+            this.StatusElem.TabIndex = 13;
+            // 
+            // WorkingStatus
+            // 
+            this.WorkingStatus.AutoSize = true;
+            this.WorkingStatus.Location = new System.Drawing.Point(241, 278);
+            this.WorkingStatus.Name = "WorkingStatus";
+            this.WorkingStatus.Size = new System.Drawing.Size(0, 13);
+            this.WorkingStatus.TabIndex = 14;
+            // 
+            // SelectedFilelbl
+            // 
+            this.SelectedFilelbl.AutoSize = true;
+            this.SelectedFilelbl.Location = new System.Drawing.Point(139, 251);
+            this.SelectedFilelbl.Name = "SelectedFilelbl";
+            this.SelectedFilelbl.Size = new System.Drawing.Size(0, 13);
+            this.SelectedFilelbl.TabIndex = 15;
+            // 
             // PgAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 336);
+            this.Controls.Add(this.SelectedFilelbl);
+            this.Controls.Add(this.WorkingStatus);
+            this.Controls.Add(this.StatusElem);
             this.Controls.Add(this.ActionSelectorElem);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DbNamelbl);
@@ -168,6 +198,7 @@
             this.Controls.Add(this.UserNameElm);
             this.Controls.Add(this.UserLbl);
             this.Name = "PgAdmin";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Postgres Database Restore Service";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -189,6 +220,9 @@
         private System.Windows.Forms.Label DbNamelbl;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox ActionSelectorElem;
+        private System.Windows.Forms.Label StatusElem;
+        private System.Windows.Forms.Label WorkingStatus;
+        private System.Windows.Forms.Label SelectedFilelbl;
     }
 }
 
