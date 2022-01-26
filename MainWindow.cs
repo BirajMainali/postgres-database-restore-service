@@ -75,6 +75,8 @@ namespace postgres_database_restore_tool
             }
             catch (Exception ex)
             {
+                SelectedFilelbl.Text = "";
+                WorkingStatus.Text = "";
                 MessageBox.Show(ex.Message);
             }
             finally
