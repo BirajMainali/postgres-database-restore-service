@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 using postgres_database_restore_tool.Helper;
 using postgres_database_restore_tool.Validator;
@@ -13,6 +14,20 @@ namespace postgres_database_restore_tool
         {
             InitializeComponent();
             AddEventHandlers();
+        }
+
+        private void StartLoading(string msg)
+        {
+            loadingLbl.Text = msg;
+            loadingLbl.Visible = true;
+            loadingBar.Visible = true;
+        }
+
+        private void EndLoading()
+        {
+            loadingLbl.Text = "";
+            loadingLbl.Visible = false;
+            loadingBar.Visible = false;
         }
 
         const string pwdKey = "PGPASSWORD";
@@ -54,8 +69,8 @@ namespace postgres_database_restore_tool
         {
             try
             {
+                StartLoading("Restoring Database");
 
-                
                 var connection = UserConnectionValidator.ValidateConnection(new UserConnectionVo()
                 {
                     UserName = UserNameElm.Text,
@@ -67,20 +82,36 @@ namespace postgres_database_restore_tool
                 });
 
                 WorkingStatus.Text = "Restoring...";
-                CommandExecutor.ExecuteRestore(connection);
-                WorkingStatus.Text = "Completed";
-                MessageBox.Show($"Database #{DatabaseElem.Text} restored successfully");
-                SelectedFilelbl.Text = "";
-                WorkingStatus.Text = "";
+                var bgw = new BackgroundWorker();
+                bgw.DoWork += (object _, DoWorkEventArgs args) =>
+                {
+                    CommandExecutor.ExecuteRestore(connection);
+                };
+                bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
+                {
+                    if(args.Error == null)
+                    {
+                        WorkingStatus.Text = "Completed";
+                        MessageBox.Show($"Database #{DatabaseElem.Text} restored successfully");
+                    }
+                    else
+                    {
+                        var msg = (args.Error as Exception)?.Message ?? "Error during operation";
+                        MessageBox.Show(msg);
+                    }
+                    SelectedFilelbl.Text = "";
+                    WorkingStatus.Text = "";
+                    EndLoading();
+
+                };
+                bgw.RunWorkerAsync();
             }
             catch (Exception ex)
             {
+                EndLoading();
                 SelectedFilelbl.Text = "";
                 WorkingStatus.Text = "";
                 MessageBox.Show(ex.Message);
-            }
-            finally
-            {
                 Environment.SetEnvironmentVariable(pwdKey, "");
             }
         }
