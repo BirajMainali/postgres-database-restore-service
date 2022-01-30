@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ComponentModel;
 using System.Windows.Forms;
 using postgres_database_restore_tool.Helper;
@@ -60,8 +61,16 @@ namespace postgres_database_restore_tool
             var selected = TargetLocation.ShowDialog();
             if (selected == DialogResult.OK)
             {
-                MessageBox.Show(TargetLocation.FileName);
+                MessageBox.Show(TargetLocation.FileName,"File Selected");
                 SelectedFilelbl.Text = TargetLocation.FileName;
+                if(string.IsNullOrWhiteSpace(DatabaseElem.Text))
+                {
+                    var fileName = TargetLocation.FileName.Split(new char[] { '/', '\\' }).LastOrDefault();
+                    if(fileName.Contains("_"))
+                    {
+                        DatabaseElem.Text = fileName.Split('_').FirstOrDefault();
+                    }
+                }
             }
         }
 
