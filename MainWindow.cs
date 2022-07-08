@@ -6,6 +6,9 @@ using System.Windows.Forms;
 using postgres_database_restore_tool.Helper;
 using postgres_database_restore_tool.Validator;
 using postgres_database_restore_tool.ValueObject;
+using postgres_database_restore_tool.Constants;
+using postgres_database_restore_tool.Properties;
+using System.Threading;
 
 namespace postgres_database_restore_tool
 {
@@ -14,6 +17,8 @@ namespace postgres_database_restore_tool
         public PgAdmin()
         {
             InitializeComponent();
+
+            WorkingStatus.Text = "";
             AddEventHandlers();
         }
 
@@ -31,8 +36,6 @@ namespace postgres_database_restore_tool
             loadingBar.Visible = false;
         }
 
-        const string pwdKey = "PGPASSWORD";
-
         private void AddEventHandlers()
         {
             Load += OnFormLoad;
@@ -40,20 +43,31 @@ namespace postgres_database_restore_tool
             FileOpenElem.Click += OnFileOpenClick;
         }
 
+
         private void OnFormLoad(object sender, EventArgs e)
         {
+            LoadPostgresUserData();
+
+            CancelRestoreButton.Visible = false;
+
             var commandType = new List<string>()
             {
-                "pg_restore",
-                "pg_dump"
+                CommandTypeConstants.PgRestore,
+                CommandTypeConstants.PgDump
             };
             var actionTypes = new List<string>()
             {
-                "Drop_and_Restore",
-                "Create_and_Restore",
+                ActionTypeConstants.DropAndRestore,
+                ActionTypeConstants.CreateAndRestore,
             };
             ActionSelectorElem.DataSource = actionTypes;
             TypeSelectorElem.DataSource = commandType;
+        }
+
+        private void LoadPostgresUserData()
+        {
+            UserNameElm.Text = Settings.Default.PostgresUserName;
+            PasswordElm.Text = Settings.Default.PostgresPassword;
         }
 
         private void OnFileOpenClick(object sender, EventArgs e)
@@ -61,7 +75,6 @@ namespace postgres_database_restore_tool
             var selected = TargetLocation.ShowDialog();
             if (selected == DialogResult.OK)
             {
-                MessageBox.Show(TargetLocation.FileName,"File Selected");
                 SelectedFilelbl.Text = TargetLocation.FileName;
                 if(string.IsNullOrWhiteSpace(DatabaseElem.Text))
                 {
@@ -74,10 +87,14 @@ namespace postgres_database_restore_tool
             }
         }
 
+        private Thread _backgroundWorkerThread;
+        
         private void OnRestore(object sender, EventArgs e)
         {
             try
             {
+                SaveUserAndPassword();
+
                 StartLoading("Restoring Database");
 
                 var connection = UserConnectionValidator.ValidateConnection(new UserConnectionVo()
@@ -90,40 +107,83 @@ namespace postgres_database_restore_tool
                     RestoreFileLocation = TargetLocation.FileName,
                 });
 
-                WorkingStatus.Text = "Restoring...";
+                RestoreBtn.Text = "⚒ Restoring...";
+                RestoreBtn.Click -= OnRestore;
                 var bgw = new BackgroundWorker();
+                               
+
+                CancelRestoreButton.Visible = true;
+                CancelRestoreButton.Click += (object _,EventArgs ex) => {
+                    AbortBackgroundWorker();
+                };
+
+                void AbortBackgroundWorker()
+                {
+                    if (_backgroundWorkerThread != null)
+                    {
+                        _backgroundWorkerThread.Abort();
+                        RestoreBtn.Text = "✖ Restore Cancelled";
+                        EndLoading();
+                        FinalizeLoadingFinished();
+                    }
+                }
+
                 bgw.DoWork += (object _, DoWorkEventArgs args) =>
                 {
-                    CommandExecutor.ExecuteRestore(connection);
+                    try
+                    {
+                        _backgroundWorkerThread = Thread.CurrentThread;                        
+                        CommandExecutor.ExecuteRestore(connection);
+                    }
+                    catch (ThreadAbortException)
+                    {
+                        //clean up after thread has aborted.
+                        throw;
+                    }
                 };
+
+                
                 bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
                 {
-                    if(args.Error == null)
+                    if (args.Error == null)
                     {
-                        WorkingStatus.Text = "Completed";
-                        MessageBox.Show($"Database #{DatabaseElem.Text} restored successfully");
+                        RestoreBtn.Text = "✅ Restore Completed";
+                        MessageBox.Show($"Database #{DatabaseElem.Text} restored successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        var msg = (args.Error as Exception)?.Message ?? "Error during operation";
-                        MessageBox.Show(msg);
+                        var msg = args.Error?.Message ?? "Error during operation";
+                        MessageBox.Show(msg, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    SelectedFilelbl.Text = "";
-                    WorkingStatus.Text = "";
-                    EndLoading();
-
+                    FinalizeLoadingFinished();
                 };
                 bgw.RunWorkerAsync();
             }
             catch (Exception ex)
             {
-                EndLoading();
-                SelectedFilelbl.Text = "";
-                WorkingStatus.Text = "";
-                MessageBox.Show(ex.Message);
-                Environment.SetEnvironmentVariable(pwdKey, "");
+                MessageBox.Show("ola =>"+ex.Message);
+                FinalizeLoadingFinished();
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable(PostgresConstants.PasswordKey, string.Empty);
             }
         }
 
+        private void FinalizeLoadingFinished()
+        {
+            EndLoading();
+            SelectedFilelbl.Text = "No file Selected";
+            RestoreBtn.Text = "⚒ Restore";
+            CancelRestoreButton.Visible = false;
+            RestoreBtn.Click += OnRestore;            
+        }
+
+        private void SaveUserAndPassword()
+        {
+            Settings.Default.PostgresUserName = UserNameElm.Text;
+            Settings.Default.PostgresPassword = PasswordElm.Text;
+            Settings.Default.Save();
+        }
     }
 }

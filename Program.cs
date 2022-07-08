@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using PG_Administrator;
 
 namespace postgres_database_restore_tool
 {
