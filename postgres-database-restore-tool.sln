@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "postgres-database-restore-tool", "postgres-database-restore-tool.csproj", "{6BE81984-6E66-40A2-96CC-F53E2B997A88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BE81984-6E66-40A2-96CC-F53E2B997A88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BE81984-6E66-40A2-96CC-F53E2B997A88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BE81984-6E66-40A2-96CC-F53E2B997A88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BE81984-6E66-40A2-96CC-F53E2B997A88}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {95C9CAF9-5647-4B16-8E51-9A0DDA376977}
+	EndGlobalSection
+EndGlobal

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using postgres_database_restore_tool.Constants;
 using postgres_database_restore_tool.ValueObject;
 
 namespace postgres_database_restore_tool.Helper
@@ -30,21 +31,20 @@ namespace postgres_database_restore_tool.Helper
 
         public static void ExecuteRestore(UserConnectionVo connection)
         {
-            const string pwdKey = "PGPASSWORD";
-            Environment.SetEnvironmentVariable(pwdKey, connection.Password);
+            Environment.SetEnvironmentVariable(PostgresConstants.PasswordKey, connection.Password);
             switch (connection.ActionTypeValue)
             {
-                case "Drop_and_Restore":
+                case ActionTypeConstants.DropAndRestore:
                     Execute("drop", connection.UserName, connection.DatabaseName);
                     Execute("create", connection.UserName, connection.DatabaseName);
                     break;
-                case "Create_and_Restore":
+                case ActionTypeConstants.CreateAndRestore:
                     Execute("create", connection.UserName, connection.DatabaseName);
                     break;
             }
 
             var proc = new Process();
-            if (connection.DatabaseBackupType == "pg_dump")
+            if (connection.DatabaseBackupType == CommandTypeConstants.PgDump)
             {
                 proc.StartInfo.FileName = "psql";
                 proc.StartInfo.Arguments = $@"-U {connection.UserName} ""{connection.DatabaseName}"" < ""{connection.RestoreFileLocation}""";
