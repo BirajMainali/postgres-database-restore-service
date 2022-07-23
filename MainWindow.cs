@@ -48,8 +48,6 @@ namespace postgres_database_restore_tool
         {
             LoadPostgresUserData();
 
-            CancelRestoreButton.Visible = false;
-
             var commandType = new List<string>()
             {
                 CommandTypeConstants.PgRestore,
@@ -86,8 +84,6 @@ namespace postgres_database_restore_tool
                 }
             }
         }
-
-        private Thread _backgroundWorkerThread;
         
         private void OnRestore(object sender, EventArgs e)
         {
@@ -110,38 +106,11 @@ namespace postgres_database_restore_tool
                 RestoreBtn.Text = "⚒ Restoring...";
                 RestoreBtn.Click -= OnRestore;
                 var bgw = new BackgroundWorker();
-                               
-
-                CancelRestoreButton.Visible = true;
-                CancelRestoreButton.Click += (object _,EventArgs ex) => {
-                    AbortBackgroundWorker();
-                };
-
-                void AbortBackgroundWorker()
-                {
-                    if (_backgroundWorkerThread != null)
-                    {
-                        _backgroundWorkerThread.Abort();
-                        RestoreBtn.Text = "✖ Restore Cancelled";
-                        EndLoading();
-                        FinalizeLoadingFinished();
-                    }
-                }
 
                 bgw.DoWork += (object _, DoWorkEventArgs args) =>
                 {
-                    try
-                    {
-                        _backgroundWorkerThread = Thread.CurrentThread;                        
-                        CommandExecutor.ExecuteRestore(connection);
-                    }
-                    catch (ThreadAbortException)
-                    {
-                        //clean up after thread has aborted.
-                        throw;
-                    }
+                    CommandExecutor.ExecuteRestore(connection);
                 };
-
                 
                 bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
                 {
@@ -175,7 +144,6 @@ namespace postgres_database_restore_tool
             EndLoading();
             SelectedFilelbl.Text = "No file Selected";
             RestoreBtn.Text = "⚒ Restore";
-            CancelRestoreButton.Visible = false;
             RestoreBtn.Click += OnRestore;            
         }
 
