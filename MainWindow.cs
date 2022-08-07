@@ -104,7 +104,6 @@ namespace postgres_database_restore_tool
                 });
 
                 RestoreBtn.Text = "⚒ Restoring...";
-                RestoreBtn.Click -= OnRestore;
                 var bgw = new BackgroundWorker();
 
                 bgw.DoWork += (object _, DoWorkEventArgs args) =>
@@ -130,7 +129,7 @@ namespace postgres_database_restore_tool
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ola =>"+ex.Message);
+                MessageBox.Show(ex.Message,"Oops!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 FinalizeLoadingFinished();
             }
             finally
@@ -144,7 +143,6 @@ namespace postgres_database_restore_tool
             EndLoading();
             SelectedFilelbl.Text = "No file Selected";
             RestoreBtn.Text = "⚒ Restore";
-            RestoreBtn.Click += OnRestore;            
         }
 
         private void SaveUserAndPassword()
