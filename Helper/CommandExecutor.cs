@@ -44,14 +44,14 @@ namespace postgres_database_restore_tool.Helper
             }
 
             var proc = new Process();
-            if (connection.DatabaseBackupType == CommandTypeConstants.PgDump)
+            if (connection.IsForPgDump)
             {
                 proc.StartInfo.FileName = "psql";
                 proc.StartInfo.Arguments = $@"-U {connection.UserName} ""{connection.DatabaseName}"" < ""{connection.RestoreFileLocation}""";
             }
             else
             {
-                proc.StartInfo.FileName = connection.DatabaseBackupType;
+                proc.StartInfo.FileName = "pg_dump";
                 proc.StartInfo.Arguments = $@"-U {connection.UserName} -d ""{connection.DatabaseName}"" ""{connection.RestoreFileLocation}""";
             }
 

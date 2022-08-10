@@ -50,8 +50,8 @@ namespace postgres_database_restore_tool
 
             var commandType = new List<string>()
             {
-                CommandTypeConstants.PgRestore,
-                CommandTypeConstants.PgDump
+                CommandTypeConstants.PgRestore.key,
+                CommandTypeConstants.PgDump.key
             };
             var actionTypes = new List<string>()
             {
@@ -99,7 +99,7 @@ namespace postgres_database_restore_tool
                     Password = PasswordElm.Text,
                     DatabaseName = DatabaseElem.Text,
                     ActionTypeValue = ActionSelectorElem.SelectedValue.ToString(),
-                    DatabaseBackupType = TypeSelectorElem.SelectedValue.ToString(),
+                    IsForPgDump = (TypeSelectorElem.SelectedValue.ToString() == CommandTypeConstants.PgDump.key),
                     RestoreFileLocation = TargetLocation.FileName,
                 });
 

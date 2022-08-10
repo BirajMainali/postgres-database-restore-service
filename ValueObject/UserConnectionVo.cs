@@ -6,7 +6,7 @@
         public string Password { get; set; }
         public string DatabaseName { get; set; }
         public string RestoreFileLocation { get; set; }
-        public string DatabaseBackupType { get; set; }
+        public bool IsForPgDump { get; set; }
         public string ActionTypeValue { get; set; }
         
     }

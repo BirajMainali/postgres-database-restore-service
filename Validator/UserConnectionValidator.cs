@@ -26,12 +26,7 @@ namespace postgres_database_restore_tool.Validator
             {
                 throw new Exception("Restore file is not selected");
             }
-
-            if (string.IsNullOrEmpty(connectionVo.DatabaseBackupType))
-            {
-                throw new Exception("Please select database backup type");
-            }
-
+            
             if (string.IsNullOrEmpty(connectionVo.ActionTypeValue))
             {
                 throw new Exception("Please select action type");
