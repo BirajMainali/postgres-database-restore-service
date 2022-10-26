@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PgAdmin));
             this.UserLbl = new System.Windows.Forms.Label();
             this.UserNameElm = new System.Windows.Forms.TextBox();
@@ -52,6 +53,9 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.WorkingStatus = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.rememberPassword = new System.Windows.Forms.CheckBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.passwordToggleButton = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -69,13 +73,13 @@
             // 
             // UserNameElm
             // 
+            this.UserNameElm.Cursor = System.Windows.Forms.Cursors.Default;
             this.UserNameElm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UserNameElm.Location = new System.Drawing.Point(198, 112);
             this.UserNameElm.Name = "UserNameElm";
             this.UserNameElm.Size = new System.Drawing.Size(367, 26);
             this.UserNameElm.TabIndex = 1;
             this.UserNameElm.Text = "postgres";
-            this.UserNameElm.UseWaitCursor = true;
             // 
             // PasswordLbl
             // 
@@ -92,7 +96,7 @@
             this.PasswordElm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PasswordElm.Location = new System.Drawing.Point(198, 150);
             this.PasswordElm.Name = "PasswordElm";
-            this.PasswordElm.Size = new System.Drawing.Size(367, 26);
+            this.PasswordElm.Size = new System.Drawing.Size(213, 26);
             this.PasswordElm.TabIndex = 3;
             this.PasswordElm.Text = "admin";
             // 
@@ -119,6 +123,7 @@
             // RestoreBtn
             // 
             this.RestoreBtn.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.RestoreBtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RestoreBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RestoreBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RestoreBtn.ForeColor = System.Drawing.Color.White;
@@ -136,6 +141,7 @@
             // FileOpenElem
             // 
             this.FileOpenElem.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.FileOpenElem.Cursor = System.Windows.Forms.Cursors.Hand;
             this.FileOpenElem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FileOpenElem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FileOpenElem.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -194,7 +200,6 @@
             this.SelectedFilelbl.Name = "SelectedFilelbl";
             this.SelectedFilelbl.Size = new System.Drawing.Size(317, 26);
             this.SelectedFilelbl.TabIndex = 15;
-            this.SelectedFilelbl.Text = "No File Selected";
             // 
             // statusStrip1
             // 
@@ -289,12 +294,40 @@
             this.label2.TabIndex = 18;
             this.label2.Text = "File :";
             // 
+            // rememberPassword
+            // 
+            this.rememberPassword.AutoSize = true;
+            this.rememberPassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.rememberPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rememberPassword.Location = new System.Drawing.Point(458, 152);
+            this.rememberPassword.Name = "rememberPassword";
+            this.rememberPassword.Size = new System.Drawing.Size(107, 24);
+            this.rememberPassword.TabIndex = 19;
+            this.rememberPassword.Text = "Remember";
+            this.tooltip.SetToolTip(this.rememberPassword, "Remember Password.");
+            this.rememberPassword.UseVisualStyleBackColor = true;
+            this.rememberPassword.CheckedChanged += new System.EventHandler(this.RememberPassword_CheckedChanged);
+            // 
+            // passwordToggleButton
+            // 
+            this.passwordToggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.passwordToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.passwordToggleButton.Location = new System.Drawing.Point(417, 150);
+            this.passwordToggleButton.Name = "passwordToggleButton";
+            this.passwordToggleButton.Size = new System.Drawing.Size(34, 26);
+            this.passwordToggleButton.TabIndex = 20;
+            this.passwordToggleButton.Text = "👁";
+            this.passwordToggleButton.UseVisualStyleBackColor = true;
+            this.passwordToggleButton.Click += new System.EventHandler(this.passwordToggleButton_Click);
+            // 
             // PgAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(650, 429);
+            this.Controls.Add(this.passwordToggleButton);
+            this.Controls.Add(this.rememberPassword);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -352,6 +385,9 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox rememberPassword;
+        private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.Button passwordToggleButton;
     }
 }
 

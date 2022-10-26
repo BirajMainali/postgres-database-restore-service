@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
@@ -8,12 +8,15 @@ using postgres_database_restore_tool.Validator;
 using postgres_database_restore_tool.ValueObject;
 using postgres_database_restore_tool.Constants;
 using postgres_database_restore_tool.Properties;
-using System.Threading;
+using System.Drawing;
 
 namespace postgres_database_restore_tool
 {
     public partial class PgAdmin : Form
     {
+        private bool isRestoring = false;
+        private bool isPasswordVisible = false;
+
         public PgAdmin()
         {
             InitializeComponent();
@@ -27,6 +30,7 @@ namespace postgres_database_restore_tool
             loadingLbl.Text = msg;
             loadingLbl.Visible = true;
             loadingBar.Visible = true;
+            RestoreBtn.Text = "⚒ Restoring...";
         }
 
         private void EndLoading()
@@ -46,6 +50,9 @@ namespace postgres_database_restore_tool
 
         private void OnFormLoad(object sender, EventArgs e)
         {
+            ApplyTheme();
+            RenderPasswordToggleState();
+
             LoadPostgresUserData();
 
             var commandType = new List<string>()
@@ -62,6 +69,30 @@ namespace postgres_database_restore_tool
             TypeSelectorElem.DataSource = commandType;
         }
 
+        private void ApplyTheme()
+        {
+            label4.ApplyRegularFont();
+            label3.ApplyBoldFont();
+            label2.ApplyRegularFont();
+            UserLbl.ApplyRegularFont();
+            PasswordLbl.ApplyRegularFont();
+            DbNamelbl.ApplyRegularFont();
+            TypeLbl.ApplyRegularFont();
+            label1.ApplyRegularFont();
+            WorkingStatus.ApplyRegularFont();
+            UserNameElm.ApplyRegularFont();
+            PasswordElm.ApplyRegularFont();
+            DatabaseElem.ApplyRegularFont();
+            TypeSelectorElem.ApplyRegularFont();
+            ActionSelectorElem.ApplyRegularFont();
+            SelectedFilelbl.ApplyRegularFont();
+            RestoreBtn.ApplyBoldFont();
+            FileOpenElem.ApplyRegularFont();
+            rememberPassword.ApplyRegularFont();
+            statusStrip1.ApplyRegularFont();
+            passwordToggleButton.ApplyRegularFont();
+        }
+
         private void LoadPostgresUserData()
         {
             UserNameElm.Text = Settings.Default.PostgresUserName;
@@ -70,48 +101,53 @@ namespace postgres_database_restore_tool
 
         private void OnFileOpenClick(object sender, EventArgs e)
         {
+            if (isRestoring) return;
+
             var selected = TargetLocation.ShowDialog();
             if (selected == DialogResult.OK)
             {
                 SelectedFilelbl.Text = TargetLocation.FileName;
-                if(string.IsNullOrWhiteSpace(DatabaseElem.Text))
+                if (string.IsNullOrWhiteSpace(DatabaseElem.Text))
                 {
                     var fileName = TargetLocation.FileName.Split(new char[] { '/', '\\' }).LastOrDefault();
-                    if(fileName.Contains("_"))
+                    if (fileName.Contains("_"))
                     {
                         DatabaseElem.Text = fileName.Split('_').FirstOrDefault();
                     }
                 }
             }
         }
-        
+
         private void OnRestore(object sender, EventArgs e)
         {
             try
             {
-                SaveUserAndPassword();
-
-                StartLoading("Restoring Database");
-
-                var connection = UserConnectionValidator.ValidateConnection(new UserConnectionVo()
+                var connection = new UserConnectionVo()
                 {
-                    UserName = UserNameElm.Text,
-                    Password = PasswordElm.Text,
-                    DatabaseName = DatabaseElem.Text,
+                    UserName = UserNameElm.Text.Trim(),
+                    Password = PasswordElm.Text.Trim(),
+                    DatabaseName = DatabaseElem.Text.Trim(),
                     ActionTypeValue = ActionSelectorElem.SelectedValue.ToString(),
                     IsForPgDump = (TypeSelectorElem.SelectedValue.ToString() == CommandTypeConstants.PgDump.key),
-                    RestoreFileLocation = TargetLocation.FileName,
-                });
+                    RestoreFileLocation = SelectedFilelbl.Text.Trim(),
+                }
+                .Validate();
 
-                RestoreBtn.Text = "⚒ Restoring...";
-                var bgw = new BackgroundWorker();
+                if (isRestoring) return;
+                isRestoring = true;
 
-                bgw.DoWork += (object _, DoWorkEventArgs args) =>
+                SaveUserInfo();
+
+                StartLoading("Restoring Database");
+                
+                var restoreBackgroundworker = new BackgroundWorker();
+
+                restoreBackgroundworker.DoWork += (object _, DoWorkEventArgs args) =>
                 {
                     CommandExecutor.ExecuteRestore(connection);
                 };
-                
-                bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
+
+                restoreBackgroundworker.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
                 {
                     if (args.Error == null)
                     {
@@ -125,31 +161,67 @@ namespace postgres_database_restore_tool
                     }
                     FinalizeLoadingFinished();
                 };
-                bgw.RunWorkerAsync();
+                restoreBackgroundworker.RunWorkerAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"Oops!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 FinalizeLoadingFinished();
             }
             finally
             {
                 Environment.SetEnvironmentVariable(PostgresConstants.PasswordKey, string.Empty);
+                isRestoring = false;
             }
         }
 
         private void FinalizeLoadingFinished()
         {
             EndLoading();
-            SelectedFilelbl.Text = "No file Selected";
+            SelectedFilelbl.Text = string.Empty;
+            DatabaseElem.Text = string.Empty;
             RestoreBtn.Text = "⚒ Restore";
+            isRestoring = false;
         }
 
-        private void SaveUserAndPassword()
+        private void SaveUserInfo()
         {
             Settings.Default.PostgresUserName = UserNameElm.Text;
-            Settings.Default.PostgresPassword = PasswordElm.Text;
             Settings.Default.Save();
+        }
+
+        private void RememberPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            var needToRememberPassword = this.rememberPassword.Checked;
+
+            if (needToRememberPassword)
+            {
+                Settings.Default.PostgresPassword = PasswordElm.Text;
+                Settings.Default.Save();
+            }
+        }
+
+        private void passwordToggleButton_Click(object sender, EventArgs e)
+        {
+            isPasswordVisible = !isPasswordVisible;
+            
+            RenderPasswordToggleState();
+        }
+
+        private void RenderPasswordToggleState()
+        {
+            PasswordElm.PasswordChar = isPasswordVisible ? '\0' : '*';
+
+            if (isPasswordVisible)
+            {
+                passwordToggleButton.BackColor = Color.CornflowerBlue;
+                passwordToggleButton.ForeColor = Color.White;
+            }
+            else
+            {
+                passwordToggleButton.BackColor = Color.White;
+                passwordToggleButton.ForeColor = Color.Black;
+            }
         }
     }
 }

@@ -9,24 +9,20 @@ namespace postgres_database_restore_tool.Helper
     {
         public static void Execute(string commandType, string user, string database)
         {
-            var proc = new Process();
-            proc.StartInfo.FileName = "psql";
-            proc.StartInfo.Arguments = $@"-U {user} -c ""{commandType} database """"{database}""""";
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.RedirectStandardError = true;
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.Start();
-            var output = proc.StandardOutput.ReadToEnd();
-            var error = proc.StandardError.ReadToEnd();
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
+            var fileName = "psql";
+            var arguments = $@"-U {user} -c ""{commandType} database """"{database}""""";
+
+            var process = ExecuteCommand(fileName, arguments);
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
             {
-                proc.Close();
+                process.Close();
                 throw new Exception("Error restoring database: " + error);
             }
-
-            proc.Close();
+            process.Close();
         }
 
         public static void ExecuteRestore(UserConnectionVo connection)
@@ -43,33 +39,44 @@ namespace postgres_database_restore_tool.Helper
                     break;
             }
 
-            var proc = new Process();
+
+            string fileName;
+            string arguments;
+
             if (connection.IsForPgDump)
             {
-                proc.StartInfo.FileName = "psql";
-                proc.StartInfo.Arguments = $@"-U {connection.UserName} ""{connection.DatabaseName}"" < ""{connection.RestoreFileLocation}""";
+                fileName = "psql";
+                arguments = $@"-U {connection.UserName} ""{connection.DatabaseName}"" < ""{connection.RestoreFileLocation}""";
             }
             else
             {
-                proc.StartInfo.FileName = "pg_dump";
-                proc.StartInfo.Arguments = $@"-U {connection.UserName} -d ""{connection.DatabaseName}"" ""{connection.RestoreFileLocation}""";
+                fileName = "pg_dump";
+                arguments = $@"-U {connection.UserName} -d ""{connection.DatabaseName}"" ""{connection.RestoreFileLocation}""";
             }
 
+            var process = ExecuteCommand(fileName, arguments);
+            process.Start();
+            var output = process.StandardOutput.ReadToEnd();
+            var error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            if (process.ExitCode != 0)
+            {
+                process.Close();
+                throw new Exception("Error restoring database.Details: " + error);
+            }
+            process.Close();
+        }
+
+        private static Process ExecuteCommand(string fileName, string arguments)
+        {
+            var proc = new Process();
+            proc.StartInfo.FileName = fileName;
+            proc.StartInfo.Arguments = arguments;
             proc.StartInfo.RedirectStandardOutput = true;
             proc.StartInfo.RedirectStandardError = true;
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.CreateNoWindow = true;
-            proc.Start();
-            var output = proc.StandardOutput.ReadToEnd();
-            var error = proc.StandardError.ReadToEnd();
-            proc.WaitForExit();
-            if (proc.ExitCode != 0)
-            {
-                proc.Close(); 
-                throw new Exception("Error restoring database.Details: " + error);
-            }
-
-            proc.Close();
+            return proc;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace postgres_database_restore_tool.Validator
 {
     public static class UserConnectionValidator
     {
-        public static UserConnectionVo ValidateConnection(UserConnectionVo connectionVo)
+        public static UserConnectionVo Validate(this UserConnectionVo connectionVo)
         {
             if (string.IsNullOrEmpty(connectionVo.UserName))
             {
