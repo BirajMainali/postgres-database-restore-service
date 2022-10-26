@@ -117,12 +117,6 @@ namespace postgres_database_restore_tool
             try
             {
                 if (isRestoring) return;
-
-                isRestoring = true;
-                SaveUserInfo();
-
-                StartLoading("Restoring Database");
-
                 var connection = new UserConnectionVo()
                 {
                     UserName = UserNameElm.Text.Trim(),
@@ -133,6 +127,11 @@ namespace postgres_database_restore_tool
                     RestoreFileLocation = TargetLocation.FileName.Trim(),
                 }
                 .Validate();
+
+                isRestoring = true;
+                SaveUserInfo();
+
+                StartLoading("Restoring Database");
 
                 RestoreBtn.Text = "⚒ Restoring...";
                 var bgw = new BackgroundWorker();
