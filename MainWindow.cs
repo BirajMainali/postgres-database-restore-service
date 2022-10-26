@@ -100,10 +100,10 @@ namespace postgres_database_restore_tool
             if (selected == DialogResult.OK)
             {
                 SelectedFilelbl.Text = TargetLocation.FileName;
-                if(string.IsNullOrWhiteSpace(DatabaseElem.Text))
+                if (string.IsNullOrWhiteSpace(DatabaseElem.Text))
                 {
                     var fileName = TargetLocation.FileName.Split(new char[] { '/', '\\' }).LastOrDefault();
-                    if(fileName.Contains("_"))
+                    if (fileName.Contains("_"))
                     {
                         DatabaseElem.Text = fileName.Split('_').FirstOrDefault();
                     }
@@ -124,7 +124,7 @@ namespace postgres_database_restore_tool
                     DatabaseName = DatabaseElem.Text.Trim(),
                     ActionTypeValue = ActionSelectorElem.SelectedValue.ToString(),
                     IsForPgDump = (TypeSelectorElem.SelectedValue.ToString() == CommandTypeConstants.PgDump.key),
-                    RestoreFileLocation = TargetLocation.FileName.Trim(),
+                    RestoreFileLocation = SelectedFilelbl.Text.Trim(),
                 }
                 .Validate();
 
@@ -140,7 +140,7 @@ namespace postgres_database_restore_tool
                 {
                     CommandExecutor.ExecuteRestore(connection);
                 };
-                
+
                 bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
                 {
                     if (args.Error == null)
@@ -155,23 +155,25 @@ namespace postgres_database_restore_tool
                     }
                     FinalizeLoadingFinished();
                 };
-                bgw.RunWorkerAsync();   
+                bgw.RunWorkerAsync();
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message,"Oops!",MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                MessageBox.Show(ex.Message, "Oops!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 FinalizeLoadingFinished();
             }
             finally
             {
                 Environment.SetEnvironmentVariable(PostgresConstants.PasswordKey, string.Empty);
+                isRestoring = false;
             }
         }
 
         private void FinalizeLoadingFinished()
         {
             EndLoading();
-            SelectedFilelbl.Text = "No file Selected";
+            SelectedFilelbl.Text = string.Empty;
+            DatabaseElem.Text = string.Empty;
             RestoreBtn.Text = "⚒ Restore";
             isRestoring = false;
         }

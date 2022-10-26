@@ -50,11 +50,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.WorkingStatus = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.rememberPassword = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -198,7 +198,6 @@
             this.SelectedFilelbl.Name = "SelectedFilelbl";
             this.SelectedFilelbl.Size = new System.Drawing.Size(317, 26);
             this.SelectedFilelbl.TabIndex = 15;
-            this.SelectedFilelbl.Text = "No File Selected";
             // 
             // statusStrip1
             // 
@@ -263,6 +262,16 @@
             this.label3.TabIndex = 19;
             this.label3.Text = "DATABASE RESTORE SERVICE";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::postgres_database_restore_tool.Properties.Resources.postgres_database_restore_icon;
+            this.pictureBox1.Location = new System.Drawing.Point(25, 9);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(66, 70);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // WorkingStatus
             // 
             this.WorkingStatus.AutoSize = true;
@@ -295,16 +304,6 @@
             this.tooltip.SetToolTip(this.rememberPassword, "Remember Password.");
             this.rememberPassword.UseVisualStyleBackColor = true;
             this.rememberPassword.CheckedChanged += new System.EventHandler(this.RememberPassword_CheckedChanged);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::postgres_database_restore_tool.Properties.Resources.postgres_database_restore_icon;
-            this.pictureBox1.Location = new System.Drawing.Point(25, 9);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(66, 70);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
             // 
             // PgAdmin
             // 
