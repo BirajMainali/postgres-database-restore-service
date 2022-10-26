@@ -8,12 +8,14 @@ using postgres_database_restore_tool.Validator;
 using postgres_database_restore_tool.ValueObject;
 using postgres_database_restore_tool.Constants;
 using postgres_database_restore_tool.Properties;
+using System.Drawing;
 
 namespace postgres_database_restore_tool
 {
     public partial class PgAdmin : Form
     {
         private bool isRestoring = false;
+        private bool isPasswordVisible = false;
 
         public PgAdmin()
         {
@@ -49,6 +51,7 @@ namespace postgres_database_restore_tool
         private void OnFormLoad(object sender, EventArgs e)
         {
             ApplyTheme();
+            RenderPasswordToggleState();
 
             LoadPostgresUserData();
 
@@ -87,6 +90,7 @@ namespace postgres_database_restore_tool
             FileOpenElem.ApplyRegularFont();
             rememberPassword.ApplyRegularFont();
             statusStrip1.ApplyRegularFont();
+            passwordToggleButton.ApplyRegularFont();
         }
 
         private void LoadPostgresUserData()
@@ -194,6 +198,29 @@ namespace postgres_database_restore_tool
             {
                 Settings.Default.PostgresPassword = PasswordElm.Text;
                 Settings.Default.Save();
+            }
+        }
+
+        private void passwordToggleButton_Click(object sender, EventArgs e)
+        {
+            isPasswordVisible = !isPasswordVisible;
+            
+            RenderPasswordToggleState();
+        }
+
+        private void RenderPasswordToggleState()
+        {
+            PasswordElm.PasswordChar = isPasswordVisible ? '\0' : '*';
+
+            if (isPasswordVisible)
+            {
+                passwordToggleButton.BackColor = Color.CornflowerBlue;
+                passwordToggleButton.ForeColor = Color.White;
+            }
+            else
+            {
+                passwordToggleButton.BackColor = Color.White;
+                passwordToggleButton.ForeColor = Color.Black;
             }
         }
     }

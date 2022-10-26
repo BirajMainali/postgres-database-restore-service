@@ -55,6 +55,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.rememberPassword = new System.Windows.Forms.CheckBox();
             this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.passwordToggleButton = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -95,8 +96,7 @@
             this.PasswordElm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PasswordElm.Location = new System.Drawing.Point(198, 150);
             this.PasswordElm.Name = "PasswordElm";
-            this.PasswordElm.PasswordChar = '*';
-            this.PasswordElm.Size = new System.Drawing.Size(243, 26);
+            this.PasswordElm.Size = new System.Drawing.Size(213, 26);
             this.PasswordElm.TabIndex = 3;
             this.PasswordElm.Text = "admin";
             // 
@@ -308,12 +308,25 @@
             this.rememberPassword.UseVisualStyleBackColor = true;
             this.rememberPassword.CheckedChanged += new System.EventHandler(this.RememberPassword_CheckedChanged);
             // 
+            // passwordToggleButton
+            // 
+            this.passwordToggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.passwordToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.passwordToggleButton.Location = new System.Drawing.Point(417, 150);
+            this.passwordToggleButton.Name = "passwordToggleButton";
+            this.passwordToggleButton.Size = new System.Drawing.Size(34, 26);
+            this.passwordToggleButton.TabIndex = 20;
+            this.passwordToggleButton.Text = "👁";
+            this.passwordToggleButton.UseVisualStyleBackColor = true;
+            this.passwordToggleButton.Click += new System.EventHandler(this.passwordToggleButton_Click);
+            // 
             // PgAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(650, 429);
+            this.Controls.Add(this.passwordToggleButton);
             this.Controls.Add(this.rememberPassword);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panel1);
@@ -374,6 +387,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox rememberPassword;
         private System.Windows.Forms.ToolTip tooltip;
+        private System.Windows.Forms.Button passwordToggleButton;
     }
 }
 
