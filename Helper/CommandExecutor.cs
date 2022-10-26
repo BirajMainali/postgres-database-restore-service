@@ -39,17 +39,18 @@ namespace postgres_database_restore_tool.Helper
                     break;
             }
 
+
             string fileName;
             string arguments;
 
-            if (connection.DatabaseBackupType == CommandTypeConstants.PgDump)
+            if (connection.IsForPgDump)
             {
                 fileName = "psql";
                 arguments = $@"-U {connection.UserName} ""{connection.DatabaseName}"" < ""{connection.RestoreFileLocation}""";
             }
             else
             {
-                fileName = connection.DatabaseBackupType;
+                fileName = "pg_dump";
                 arguments = $@"-U {connection.UserName} -d ""{connection.DatabaseName}"" ""{connection.RestoreFileLocation}""";
             }
 

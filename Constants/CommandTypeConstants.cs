@@ -1,9 +1,8 @@
 ﻿namespace postgres_database_restore_tool.Constants
 {
-    internal class CommandTypeConstants
+    internal static class CommandTypeConstants
     {
-        public const string PgRestore = "pg_restore";
-        public const string PgDump = "pg_dump";
-
+        public static (string key, string value) PgRestore = ("PG Restore", "pg_restore");
+        public static (string key, string value) PgDump = ("PG Dump", "pg_dump");
     }
 }
