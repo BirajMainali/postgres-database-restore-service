@@ -131,6 +131,7 @@ namespace postgres_database_restore_tool
 
                 if (isRestoring) return;
                 isRestoring = true;
+
                 SaveUserInfo();
 
                 StartLoading("Restoring Database");
