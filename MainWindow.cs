@@ -13,6 +13,8 @@ namespace postgres_database_restore_tool
 {
     public partial class PgAdmin : Form
     {
+        private bool isRestoring = false;
+
         public PgAdmin()
         {
             InitializeComponent();
@@ -26,6 +28,7 @@ namespace postgres_database_restore_tool
             loadingLbl.Text = msg;
             loadingLbl.Visible = true;
             loadingBar.Visible = true;
+            RestoreBtn.Text = "⚒ Restoring...";
         }
 
         private void EndLoading()
@@ -111,12 +114,10 @@ namespace postgres_database_restore_tool
             }
         }
 
-        bool isRestoring = false;
         private void OnRestore(object sender, EventArgs e)
         {
             try
             {
-                if (isRestoring) return;
                 var connection = new UserConnectionVo()
                 {
                     UserName = UserNameElm.Text.Trim(),
@@ -128,12 +129,12 @@ namespace postgres_database_restore_tool
                 }
                 .Validate();
 
+                if (isRestoring) return;
                 isRestoring = true;
                 SaveUserInfo();
 
                 StartLoading("Restoring Database");
-
-                RestoreBtn.Text = "⚒ Restoring...";
+                
                 var restoreBackgroundworker = new BackgroundWorker();
 
                 restoreBackgroundworker.DoWork += (object _, DoWorkEventArgs args) =>
@@ -186,9 +187,9 @@ namespace postgres_database_restore_tool
 
         private void RememberPassword_CheckedChanged(object sender, EventArgs e)
         {
-            var needToRemeberPassword = this.rememberPassword.Checked;
+            var needToRememberPassword = this.rememberPassword.Checked;
 
-            if (needToRemeberPassword)
+            if (needToRememberPassword)
             {
                 Settings.Default.PostgresPassword = PasswordElm.Text;
                 Settings.Default.Save();
