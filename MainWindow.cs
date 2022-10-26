@@ -8,7 +8,6 @@ using postgres_database_restore_tool.Validator;
 using postgres_database_restore_tool.ValueObject;
 using postgres_database_restore_tool.Constants;
 using postgres_database_restore_tool.Properties;
-using System.Threading;
 
 namespace postgres_database_restore_tool
 {
@@ -46,6 +45,8 @@ namespace postgres_database_restore_tool
 
         private void OnFormLoad(object sender, EventArgs e)
         {
+            ApplyTheme();
+
             LoadPostgresUserData();
 
             var commandType = new List<string>()
@@ -62,6 +63,29 @@ namespace postgres_database_restore_tool
             TypeSelectorElem.DataSource = commandType;
         }
 
+        private void ApplyTheme()
+        {
+            label4.ApplyRegularFont();
+            label3.ApplyBoldFont();
+            label2.ApplyRegularFont();
+            UserLbl.ApplyRegularFont();
+            PasswordLbl.ApplyRegularFont();
+            DbNamelbl.ApplyRegularFont();
+            TypeLbl.ApplyRegularFont();
+            label1.ApplyRegularFont();
+            WorkingStatus.ApplyRegularFont();
+            UserNameElm.ApplyRegularFont();
+            PasswordElm.ApplyRegularFont();
+            DatabaseElem.ApplyRegularFont();
+            TypeSelectorElem.ApplyRegularFont();
+            ActionSelectorElem.ApplyRegularFont();
+            SelectedFilelbl.ApplyRegularFont();
+            RestoreBtn.ApplyBoldFont();
+            FileOpenElem.ApplyRegularFont();
+            rememberPassword.ApplyRegularFont();
+            statusStrip1.ApplyRegularFont();
+        }
+
         private void LoadPostgresUserData()
         {
             UserNameElm.Text = Settings.Default.PostgresUserName;
@@ -70,6 +94,8 @@ namespace postgres_database_restore_tool
 
         private void OnFileOpenClick(object sender, EventArgs e)
         {
+            if (isRestoring) return;
+
             var selected = TargetLocation.ShowDialog();
             if (selected == DialogResult.OK)
             {
@@ -84,24 +110,29 @@ namespace postgres_database_restore_tool
                 }
             }
         }
-        
+
+        bool isRestoring = false;
         private void OnRestore(object sender, EventArgs e)
         {
             try
             {
-                SaveUserAndPassword();
+                if (isRestoring) return;
+
+                isRestoring = true;
+                SaveUserInfo();
 
                 StartLoading("Restoring Database");
 
-                var connection = UserConnectionValidator.ValidateConnection(new UserConnectionVo()
+                var connection = new UserConnectionVo()
                 {
-                    UserName = UserNameElm.Text,
-                    Password = PasswordElm.Text,
-                    DatabaseName = DatabaseElem.Text,
+                    UserName = UserNameElm.Text.Trim(),
+                    Password = PasswordElm.Text.Trim(),
+                    DatabaseName = DatabaseElem.Text.Trim(),
                     ActionTypeValue = ActionSelectorElem.SelectedValue.ToString(),
                     DatabaseBackupType = TypeSelectorElem.SelectedValue.ToString(),
-                    RestoreFileLocation = TargetLocation.FileName,
-                });
+                    RestoreFileLocation = TargetLocation.FileName.Trim(),
+                }
+                .Validate();
 
                 RestoreBtn.Text = "⚒ Restoring...";
                 var bgw = new BackgroundWorker();
@@ -125,7 +156,7 @@ namespace postgres_database_restore_tool
                     }
                     FinalizeLoadingFinished();
                 };
-                bgw.RunWorkerAsync();
+                bgw.RunWorkerAsync();   
             }
             catch (Exception ex)
             {
@@ -143,13 +174,24 @@ namespace postgres_database_restore_tool
             EndLoading();
             SelectedFilelbl.Text = "No file Selected";
             RestoreBtn.Text = "⚒ Restore";
+            isRestoring = false;
         }
 
-        private void SaveUserAndPassword()
+        private void SaveUserInfo()
         {
             Settings.Default.PostgresUserName = UserNameElm.Text;
-            Settings.Default.PostgresPassword = PasswordElm.Text;
             Settings.Default.Save();
+        }
+
+        private void RememberPassword_CheckedChanged(object sender, EventArgs e)
+        {
+            var needToRemeberPassword = this.rememberPassword.Checked;
+
+            if (needToRemeberPassword)
+            {
+                Settings.Default.PostgresPassword = PasswordElm.Text;
+                Settings.Default.Save();
+            }
         }
     }
 }

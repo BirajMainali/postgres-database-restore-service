@@ -49,6 +49,7 @@
     <Compile Include="Constants\ActionTypeConstants.cs" />
     <Compile Include="Constants\CommandTypeConstants.cs" />
     <Compile Include="Constants\PostgresConstants.cs" />
+    <Compile Include="Helper\ApplyFont.cs" />
     <Compile Include="Helper\CommandExecutor.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -58,6 +59,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\FontProvider.cs" />
     <Compile Include="Validator\UserConnectionValidator.cs" />
     <Compile Include="ValueObject\UserConnectionVo.cs" />
     <EmbeddedResource Include="MainWindow.resx">
@@ -89,6 +91,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Fonts\Inter-Bold.ttf" />
+    <None Include="Assets\Fonts\Inter-Regular.ttf" />
     <None Include="Resources\postgres_database_restore_icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

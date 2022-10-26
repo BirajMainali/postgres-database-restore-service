@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PgAdmin));
             this.UserLbl = new System.Windows.Forms.Label();
             this.UserNameElm = new System.Windows.Forms.TextBox();
@@ -49,9 +50,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.WorkingStatus = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.rememberPassword = new System.Windows.Forms.CheckBox();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -92,7 +95,8 @@
             this.PasswordElm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PasswordElm.Location = new System.Drawing.Point(198, 150);
             this.PasswordElm.Name = "PasswordElm";
-            this.PasswordElm.Size = new System.Drawing.Size(367, 26);
+            this.PasswordElm.PasswordChar = '*';
+            this.PasswordElm.Size = new System.Drawing.Size(243, 26);
             this.PasswordElm.TabIndex = 3;
             this.PasswordElm.Text = "admin";
             // 
@@ -259,16 +263,6 @@
             this.label3.TabIndex = 19;
             this.label3.Text = "DATABASE RESTORE SERVICE";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::postgres_database_restore_tool.Properties.Resources.postgres_database_restore_icon;
-            this.pictureBox1.Location = new System.Drawing.Point(25, 9);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(66, 70);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // WorkingStatus
             // 
             this.WorkingStatus.AutoSize = true;
@@ -289,12 +283,36 @@
             this.label2.TabIndex = 18;
             this.label2.Text = "File :";
             // 
+            // rememberPassword
+            // 
+            this.rememberPassword.AutoSize = true;
+            this.rememberPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rememberPassword.Location = new System.Drawing.Point(458, 152);
+            this.rememberPassword.Name = "rememberPassword";
+            this.rememberPassword.Size = new System.Drawing.Size(107, 24);
+            this.rememberPassword.TabIndex = 19;
+            this.rememberPassword.Text = "Remember";
+            this.tooltip.SetToolTip(this.rememberPassword, "Remember Password.");
+            this.rememberPassword.UseVisualStyleBackColor = true;
+            this.rememberPassword.CheckedChanged += new System.EventHandler(this.RememberPassword_CheckedChanged);
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::postgres_database_restore_tool.Properties.Resources.postgres_database_restore_icon;
+            this.pictureBox1.Location = new System.Drawing.Point(25, 9);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(66, 70);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // PgAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ButtonHighlight;
             this.ClientSize = new System.Drawing.Size(650, 429);
+            this.Controls.Add(this.rememberPassword);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.statusStrip1);
@@ -352,6 +370,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox rememberPassword;
+        private System.Windows.Forms.ToolTip tooltip;
     }
 }
 
