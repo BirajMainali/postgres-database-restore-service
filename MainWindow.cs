@@ -134,14 +134,14 @@ namespace postgres_database_restore_tool
                 StartLoading("Restoring Database");
 
                 RestoreBtn.Text = "⚒ Restoring...";
-                var bgw = new BackgroundWorker();
+                var restoreBackgroundworker = new BackgroundWorker();
 
-                bgw.DoWork += (object _, DoWorkEventArgs args) =>
+                restoreBackgroundworker.DoWork += (object _, DoWorkEventArgs args) =>
                 {
                     CommandExecutor.ExecuteRestore(connection);
                 };
 
-                bgw.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
+                restoreBackgroundworker.RunWorkerCompleted += (object _, RunWorkerCompletedEventArgs args) =>
                 {
                     if (args.Error == null)
                     {
@@ -155,7 +155,7 @@ namespace postgres_database_restore_tool
                     }
                     FinalizeLoadingFinished();
                 };
-                bgw.RunWorkerAsync();
+                restoreBackgroundworker.RunWorkerAsync();
             }
             catch (Exception ex)
             {

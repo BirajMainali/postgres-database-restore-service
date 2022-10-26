@@ -72,6 +72,7 @@
             // 
             // UserNameElm
             // 
+            this.UserNameElm.Cursor = System.Windows.Forms.Cursors.WaitCursor;
             this.UserNameElm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UserNameElm.Location = new System.Drawing.Point(198, 112);
             this.UserNameElm.Name = "UserNameElm";
@@ -123,6 +124,7 @@
             // RestoreBtn
             // 
             this.RestoreBtn.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.RestoreBtn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RestoreBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RestoreBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RestoreBtn.ForeColor = System.Drawing.Color.White;
@@ -140,6 +142,7 @@
             // FileOpenElem
             // 
             this.FileOpenElem.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.FileOpenElem.Cursor = System.Windows.Forms.Cursors.Hand;
             this.FileOpenElem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.FileOpenElem.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FileOpenElem.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
@@ -295,6 +298,7 @@
             // rememberPassword
             // 
             this.rememberPassword.AutoSize = true;
+            this.rememberPassword.Cursor = System.Windows.Forms.Cursors.Hand;
             this.rememberPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rememberPassword.Location = new System.Drawing.Point(458, 152);
             this.rememberPassword.Name = "rememberPassword";
